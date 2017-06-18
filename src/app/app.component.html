@@ -1,0 +1,38 @@
+<!--The whole content below can be removed with the new code.-->
+<div class="row">
+  <!--### Spalte 1: Kategorien-->
+  <div class="col-xs-2" *ngIf="categorySet">
+    <h4 style="margin: 0px">{{ categorySet.length }} Kategorien</h4>
+    <div class="list-group">
+      <a  *ngFor="let c of categorySet"
+          (click)="selectCategory( c )"
+          title="Kategorie #{{ c.categoryID }}, erzeugt am {{ c.created | amDateFormat: 'LLL' }}"
+          class="list-group-item"
+          [style.background-color]="c.categoryID == category.categoryID ? '#E0EEFA' : 'white'">
+        {{ c.name }} <span class="badge badge-info" title="{{ c.taskSet.length }} Teilaufgaben">{{ c.taskSet.length }}</span>
+      </a>
+    </div>
+  </div>
+  <!--### Spalte 2: Aufgaben-->
+  <div [ngClass]="{ 'col-xs-10': !task, 'col-xs-6': task }" *ngIf="taskSet">
+    <h4 style="margin: 0px">{{ taskSet.length }} Aufgaben in Kategorie {{ category.name }}</h4>
+    <div class="list-group">
+      <div class="list-group">
+        <a *ngFor="let t of taskSet"
+            (click)="showTaskDetail( t )"
+            title="Aufgabe #{{ t.taskID }}, erzeugt am {{ t.created | amDateFormat: 'LLL'}}"
+            class="list-group-item"
+            [style.background-color]="t.taskID == task?.taskID ? '#E0EEFA' : 'white'">
+            <input type="checkbox" [(ngModel)]="t.done" name="done{{ t.taskID }}" id="done{{ t.taskID }}" (change)="changeDone( t )" class="form-control" WLcheckbox> <b>{{ t.title }}</b>
+            <span class="badge badge-important" title="Wichtigkeit: {{ t.importance | importance }}">{{ t.importance | importance }}</span><br>
+            <div>{{ getUndoneSubTaskSet( t ).length }} offene Teilaufgaben</div>
+            <div *ngIf="t.due" [ngClass]="{ 'text-danger': t.due<today, 'text-warning': t.due==today, 'text-success': t.due>today}">fällig {{ t.due | amTimeAgo }}</div>
+          </a>
+      </div>
+    </div>
+  </div>
+  <!--### spalte 3: Aufgabendetails-->
+  <div class="col-xs-4" [hidden]="!task">
+
+  </div>
+</div>
